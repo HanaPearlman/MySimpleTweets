@@ -2,11 +2,13 @@ package com.codepath.apps.restclienttemplate.models;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.parceler.Parcel;
 
 /**
  * Created by hanapearlman on 6/26/17.
  */
 
+@Parcel
 public class Tweet {
     // tweet attributes
     public String body;
@@ -14,6 +16,9 @@ public class Tweet {
     public User user;
     public String createdAt;
 
+    public Tweet() {
+
+    }
     // deserialize the JSON
     public static Tweet fromJSON(JSONObject jsonObject) throws JSONException {
         Tweet tweet = new Tweet();

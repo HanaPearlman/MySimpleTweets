@@ -23,8 +23,8 @@ import com.loopj.android.http.RequestParams;
 public class TwitterClient extends OAuthBaseClient {
 	public static final BaseApi REST_API_INSTANCE = TwitterApi.instance(); // Change this
 	public static final String REST_URL = "https://api.twitter.com/1.1"; // Change this, base API URL
-	public static final String REST_CONSUMER_KEY = "aVGfzATrjOxPd7VFA0mcXkItg";       // Change this
-	public static final String REST_CONSUMER_SECRET = "4n3Y2x5LpHimymEVBc9pxLluPwI0hN4Qfe9IhMN34DkEaMd4NV"; // Change this
+	public static final String REST_CONSUMER_KEY = "hlmgLl69cctfW7lDz1ytjJbQp";       // Change this
+	public static final String REST_CONSUMER_SECRET = "fItGFvRzEoLXEGmfrGPdQuH2a7WT9npmAfzqeXIlNe1NN1Mhu4"; // Change this
 
 	// Landing page to indicate the OAuth flow worked in case Chrome for Android 25+ blocks navigation back to the app.
 	public static final String FALLBACK_URL = "https://codepath.github.io/android-rest-client-template/success.html";
@@ -59,4 +59,18 @@ public class TwitterClient extends OAuthBaseClient {
 	 *    i.e client.get(apiUrl, params, handler);
 	 *    i.e client.post(apiUrl, params, handler);
 	 */
+
+	public void sendTweet(String message, AsyncHttpResponseHandler handler) {
+		String apiUrl = getApiUrl("statuses/update.json");
+		RequestParams params = new RequestParams();
+		params.put("status", message);
+		client.post(apiUrl, params, handler);
+	}
+
+	public void getUserCredentials(AsyncHttpResponseHandler handler) {
+		String apiUrl = getApiUrl("account/verify_credentials.json");
+		RequestParams params = new RequestParams();
+		params.put("include_email", "false");
+		client.get(apiUrl, params, handler);
+	}
 }
