@@ -24,6 +24,10 @@ public class ComposeTweetActivity extends AppCompatActivity {
         setContentView(R.layout.activity_compose_tweet);
     }
 
+    public void onCancel(View v) {
+        finish();
+    }
+
     public void onSubmit(View v) {
         EditText etName = (EditText) findViewById(R.id.etTweet);
         TwitterClient client = new TwitterClient(this);

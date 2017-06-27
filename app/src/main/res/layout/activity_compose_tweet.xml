@@ -31,6 +31,7 @@
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/btTweet"
         android:layout_alignParentStart="true"
-        android:text="Cancel" />
+        android:text="Cancel"
+        android:onClick="onCancel"/>
 
 </RelativeLayout>

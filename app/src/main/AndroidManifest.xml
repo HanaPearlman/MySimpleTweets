@@ -34,7 +34,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".TimeLineActivity" />
-        <activity android:name=".ComposeTweetActivity"></activity>
+        <activity android:name=".ComposeTweetActivity" />
+        <activity android:name=".TweetDetailsActivity"></activity>
     </application>
 
 </manifest>
