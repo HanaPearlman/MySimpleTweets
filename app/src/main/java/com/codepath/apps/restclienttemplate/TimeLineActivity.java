@@ -8,7 +8,6 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.codepath.apps.restclienttemplate.models.Tweet;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -74,7 +73,7 @@ public class TimeLineActivity extends AppCompatActivity {
             tweets.add(0, tweet);
             tweetAdapter.notifyItemInserted(0);
             rvTweets.scrollToPosition(0);
-            Toast.makeText(this, "Tweet successful", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this, "Tweet successful", Toast.LENGTH_SHORT).show();
             // Toast the name to display temporarily on screen
             // TODO: toast removed but could do a notification at the bottom
         }

@@ -3,19 +3,25 @@ package com.codepath.apps.restclienttemplate;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.codepath.apps.restclienttemplate.models.Tweet;
+import com.loopj.android.http.JsonHttpResponseHandler;
 
+import org.json.JSONObject;
 import org.parceler.Parcels;
+
+import cz.msebera.android.httpclient.Header;
 
 public class TweetDetailsActivity extends AppCompatActivity {
 
-    TwitterClient client;
+    TwitterClient client; //should I get rid of this? and add context?
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +41,7 @@ public class TweetDetailsActivity extends AppCompatActivity {
         userName.setText(tweet.user.name);
         screenName.setText(tweet.user.screenName);
         tweetBody.setText(tweet.body);
+        final long id = tweet.uid;
 
         Glide.with(this)
                 .load(tweet.user.profileImageUrl)
@@ -45,7 +52,24 @@ public class TweetDetailsActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //TODO: add network call to retweet the tweet, Toast success
-                //check if tweet is already retweeted
+                TwitterClient client = TwitterApp.getRestClient();
+                client.retweet(id, new JsonHttpResponseHandler() {
+
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                        super.onSuccess(statusCode, headers, response);
+                        //mark tweet as retweeted?
+                        Toast.makeText(getApplicationContext(), "Retweeted", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(getApplicationContext(), TimeLineActivity.class);
+                        getApplicationContext().startActivity(intent);
+                    }
+
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                        Toast.makeText(getApplicationContext(), "Failed to Retweet", Toast.LENGTH_SHORT).show();
+                        Log.e("TweetDetails", "Failed to retweet", throwable);
+                    }
+                });
             }
         });
 
@@ -53,7 +77,25 @@ public class TweetDetailsActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //TODO: add network call to favorite the tweet, Toast success
-                //check if tweet is already favorited
+                TwitterClient client = TwitterApp.getRestClient();
+                client.favorite(id, new JsonHttpResponseHandler() {
+
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                        super.onSuccess(statusCode, headers, response);
+                        //mark tweet as faved?
+                        Toast.makeText(getApplicationContext(), "Favorited", Toast.LENGTH_SHORT).show(); //might want to have this return an intent? so it doesn't scroll back to the top?
+                        Intent intent = new Intent(getApplicationContext(), TimeLineActivity.class);
+                        getApplicationContext().startActivity(intent);
+                    }
+
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                        Toast.makeText(getApplicationContext(), "Failed to Favorite", Toast.LENGTH_SHORT).show();
+                        Log.e("TweetDetails", "Failed to favorite", throwable);
+                    }
+                });
+
             }
         });
     }

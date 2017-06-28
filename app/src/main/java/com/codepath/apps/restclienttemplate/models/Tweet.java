@@ -17,6 +17,8 @@ public class Tweet {
     public String createdAt;
     public int faveCount;
     public int retweetCount;
+    public boolean favorited;
+    public boolean retweeted;
 
     public Tweet() {
 
