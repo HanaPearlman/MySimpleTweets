@@ -70,7 +70,6 @@ public class TweetDetailsActivity extends AppCompatActivity {
                         super.onSuccess(statusCode, headers, response);
                         //mark tweet as retweeted?
                         tweet.retweeted = true;
-                        Log.i("TweetAdapter", "Retweeted=" + tweet.retweeted);
                         Toast.makeText(getApplicationContext(), "Retweeted", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(getApplicationContext(), TimeLineActivity.class);
                         getApplicationContext().startActivity(intent);
