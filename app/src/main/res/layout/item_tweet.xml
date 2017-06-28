@@ -24,7 +24,7 @@
 
     <TextView
         android:id="@+id/tvBody"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tvUserName"
         android:layout_marginLeft="5dp"
@@ -51,23 +51,22 @@
         android:layout_marginLeft="5dp"
         android:text="TextView" />
 
-    <ImageButton
+    <ImageView
         android:id="@+id/ibReply"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
         android:layout_alignStart="@+id/tvBody"
         android:layout_below="@+id/tvBody"
-        android:layout_marginTop="5dp"
         app:srcCompat="@drawable/ic_reply" />
 
-    <ImageButton
+    <ImageView
         android:id="@+id/ibRetweet"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:layout_alignTop="@+id/ibReply"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
         android:layout_alignParentLeft="true"
+        android:layout_alignTop="@+id/ibReply"
         android:layout_marginLeft="156dp"
-        app:srcCompat="@drawable/ic_retweet" />
+        app:srcCompat="@drawable/ic_retweet_stroke" />
 
     <TextView
         android:id="@+id/tvRetweetCount"
@@ -79,14 +78,14 @@
         <!--android:layout_toRightOf="@+id/ibRetweet"-->
 
 
-    <ImageButton
+    <ImageView
         android:id="@+id/ibFavorite"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        app:srcCompat="@drawable/ic_favorite"
-        android:layout_alignTop="@+id/ibReply"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
         android:layout_alignParentRight="true"
-        android:layout_marginRight="55dp"/>
+        android:layout_alignTop="@+id/ibReply"
+        android:layout_marginRight="55dp"
+        app:srcCompat="@drawable/ic_favorite_stroke" />
 
     <TextView
         android:id="@+id/tvFavoriteCount"

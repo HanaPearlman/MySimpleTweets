@@ -8,7 +8,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -62,8 +61,22 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
         holder.tvBody.setText(tweet.body);
         holder.tvRelTime.setText(getRelativeTimeAgo(tweet.createdAt));
         holder.tvScreenName.setText(tweet.user.screenName);
+
         holder.tvFavoriteCount.setText("" + tweet.faveCount);
+        if (tweet.favorited) {
+            holder.ibFavorite.setImageResource(R.drawable.ic_favorite);
+            Log.i("TweetAdapter", "Favorited, should bold");
+        } else {
+            holder.ibFavorite.setImageResource(R.drawable.ic_favorite_stroke);
+            Log.i("TweetAdapter", "Not Favorited, no bold");
+        }
+
         holder.tvRetweetCount.setText("" + tweet.retweetCount);
+        if (tweet.retweeted) {
+            holder.ibRetweet.setImageResource(R.drawable.ic_retweet);
+        } else {
+            holder.ibRetweet.setImageResource(R.drawable.ic_retweet_stroke);
+        }
     }
 
     @Override
@@ -80,9 +93,9 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
         public TextView tvRelTime;
         public TextView tvRetweetCount;
         public TextView tvFavoriteCount;
-        public ImageButton ibRetweet;
-        public ImageButton ibFavorite;
-        public ImageButton ibReply;
+        public ImageView ibRetweet;
+        public ImageView ibFavorite;
+        public ImageView ibReply;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -95,9 +108,9 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
             tvRelTime = (TextView) itemView.findViewById(R.id.tvRelTime);
             tvRetweetCount = (TextView) itemView.findViewById(R.id.tvRetweetCount);
             tvFavoriteCount = (TextView) itemView.findViewById(R.id.tvFavoriteCount);
-            ibRetweet = (ImageButton) itemView.findViewById(R.id.ibRetweet);
-            ibFavorite = (ImageButton) itemView.findViewById(R.id.ibFavorite);
-            ibReply = (ImageButton) itemView.findViewById(R.id.ibReply);
+            ibRetweet = (ImageView) itemView.findViewById(R.id.ibRetweet);
+            ibFavorite = (ImageView) itemView.findViewById(R.id.ibFavorite);
+            ibReply = (ImageView) itemView.findViewById(R.id.ibReply);
 
             ibReply.setOnClickListener(new View.OnClickListener() {
                 @Override

@@ -45,20 +45,20 @@
         android:text="TextView"
         android:layout_alignParentEnd="true" />
 
-    <ImageButton
+    <ImageView
         android:id="@+id/ibFavorite"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
         android:layout_alignParentEnd="true"
         android:layout_below="@+id/tvBody"
         android:layout_marginRight="10dp"
-        app:srcCompat="@drawable/ic_favorite" />
+        app:srcCompat="@drawable/ic_favorite_stroke" />
 
-    <ImageButton
+    <ImageView
         android:id="@+id/ibRetweet"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
         android:layout_below="@+id/tvBody"
         android:layout_centerHorizontal="true"
-        app:srcCompat="@drawable/ic_retweet" />
+        app:srcCompat="@drawable/ic_retweet_stroke" />
 </RelativeLayout>
