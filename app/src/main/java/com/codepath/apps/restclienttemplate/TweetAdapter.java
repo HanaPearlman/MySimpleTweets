@@ -51,16 +51,18 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
     public void onBindViewHolder(ViewHolder holder, int position) {
         // get the data according to position
         Tweet tweet = mTweets.get(position);
+
+        Glide.with(context)
+                .load(tweet.user.profileImageUrl)
+                .placeholder(R.drawable.ic_placeholder)
+                .into(holder.ivProfileImage);
+
         holder.tvUsername.setText(tweet.user.name);
         holder.tvBody.setText(tweet.body);
         holder.tvRelTime.setText(getRelativeTimeAgo(tweet.createdAt));
         holder.tvScreenName.setText(tweet.user.screenName);
         holder.tvFavoriteCount.setText("" + tweet.faveCount);
         holder.tvRetweetCount.setText("" + tweet.retweetCount);
-
-        Glide.with(context)
-                .load(tweet.user.profileImageUrl)
-                .into(holder.ivProfileImage);
     }
 
     @Override
@@ -116,7 +118,7 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
                 }
             });
 
-            itemView.setOnClickListener(new View.OnClickListener() {
+            tvBody.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     int position = getAdapterPosition();

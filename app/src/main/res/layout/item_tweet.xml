@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="5dp">
+    android:layout_margin="10dp">
 
     <ImageView
         android:id="@+id/ivProfileImage"
@@ -65,7 +65,8 @@
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:layout_alignTop="@+id/ibReply"
-        android:layout_centerHorizontal="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="156dp"
         app:srcCompat="@drawable/ic_retweet" />
 
     <TextView
@@ -74,7 +75,9 @@
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/ibReply"
         android:layout_marginRight="5dp"
-        android:layout_toRightOf="@+id/ibRetweet" />
+        android:layout_toEndOf="@+id/ibRetweet"/>
+        <!--android:layout_toRightOf="@+id/ibRetweet"-->
+
 
     <ImageButton
         android:id="@+id/ibFavorite"
