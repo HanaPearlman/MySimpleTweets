@@ -3,6 +3,8 @@ package com.codepath.apps.restclienttemplate;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -32,12 +34,28 @@ public class ComposeTweetActivity extends AppCompatActivity {
         Intent intent = getIntent();
         replying = intent.getBooleanExtra("replying", false);
         if (replying) {
-            replyUser = intent.getStringExtra("replyUser");
+            replyUser = intent.getStringExtra("replyUser"); //TODO: this is not necessarily the "original" tweeter
             inReplyToStatusId = intent.getLongExtra("in_reply_to_status_id", 0);
             tvReplyTo.setText("Replying to " + replyUser);
         } else {
             tvReplyTo.setVisibility(View.GONE);
         }
+
+        EditText etName = (EditText) findViewById(R.id.etTweet);
+        final TextView tvCharCount = (TextView) findViewById(R.id.tvCharCount);
+        TextWatcher mTextEditorWatcher = new TextWatcher() {
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                //This sets a textview to the current length
+                tvCharCount.setText(String.valueOf(140 - s.length()));
+            }
+
+            public void afterTextChanged(Editable s) {
+            }
+        };
+        etName.addTextChangedListener(mTextEditorWatcher);
     }
 
     public void onCancel(View v) {
