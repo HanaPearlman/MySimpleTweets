@@ -65,7 +65,7 @@
         android:layout_height="24dp"
         android:layout_alignParentLeft="true"
         android:layout_alignTop="@+id/ibReply"
-        android:layout_marginLeft="168dp"
+        android:layout_marginLeft="160dp"
         app:srcCompat="@drawable/ic_retweet_stroke" />
 
     <TextView

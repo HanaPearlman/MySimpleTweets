@@ -1,25 +1,34 @@
 package com.codepath.apps.restclienttemplate;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.codepath.apps.restclienttemplate.models.Tweet;
+import com.loopj.android.http.JsonHttpResponseHandler;
 
+import org.json.JSONObject;
 import org.parceler.Parcels;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
+
+import cz.msebera.android.httpclient.Header;
 
 /**
  * Created by hanapearlman on 6/26/17.
@@ -112,7 +121,7 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
             ibFavorite = (ImageView) itemView.findViewById(R.id.ibFavorite);
             ibReply = (ImageView) itemView.findViewById(R.id.ibReply);
 
-            ibReply.setOnClickListener(new View.OnClickListener() {
+           /* ibReply.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     int position = getAdapterPosition();
@@ -127,6 +136,21 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
                         intent.putExtra("replying", true);
                         intent.putExtra("in_reply_to_status_id", id);
                         context.startActivity(intent);
+                    }
+                }
+            });*/
+
+            ibReply.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int position = getAdapterPosition();
+                    // make sure the position is valid
+                    if (position != RecyclerView.NO_POSITION) {
+                        // get the movie at the position
+                        Tweet tweet = mTweets.get(position);
+                        String replyUser = tweet.user.screenName;
+                        long id = tweet.uid;
+                        showAlertDialogForCompose(replyUser, id);
                     }
                 }
             });
@@ -165,13 +189,13 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
                     System.currentTimeMillis(), DateUtils.SECOND_IN_MILLIS).toString();
 
             // TODO: this is very hacky, please fix
-            relativeDate = relativeDate.substring(0, relativeDate.length() - 4);
             relativeDate = relativeDate.replace(" seconds", "s");
             relativeDate = relativeDate.replace(" second", "s");
             relativeDate = relativeDate.replace(" minutes", "m");
             relativeDate = relativeDate.replace(" minute", "m");
             relativeDate = relativeDate.replace(" hours", "h");
             relativeDate = relativeDate.replace(" hour", "h");
+            relativeDate = relativeDate.replace(" ago", "");
 
         } catch (ParseException e) {
             e.printStackTrace();
@@ -190,4 +214,73 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
         mTweets.addAll(list);
         notifyDataSetChanged();
     }
+
+    private static void showAlertDialogForCompose(String originalUser, long replyID) {
+
+        final long inReplyToStatusId = replyID;
+        final String replyUser = originalUser;
+
+        // inflate message_item.xml view
+        View  messageView = LayoutInflater.from(context).
+                inflate(R.layout.compose_modal, null);
+        // Create alert dialog builder
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
+        // set message_item.xml to AlertDialog builder
+        alertDialogBuilder.setView(messageView);
+
+        // Create alert dialog
+
+        final AlertDialog alertDialog = alertDialogBuilder.create();
+        final EditText etName = (EditText) messageView.findViewById(R.id.etTweet);
+        final TwitterClient client = new TwitterClient(context);
+        final TextView tvReplyTo = (TextView) messageView.findViewById(R.id.tvReplyTo);
+        final TextView tvCharCount = (TextView) messageView.findViewById(R.id.tvCharCount);
+
+        tvReplyTo.setText("Replying to " + replyUser);
+        tvCharCount.setText(String.valueOf(140 - replyUser.length()));
+
+        TextWatcher mTextEditorWatcher = new TextWatcher() {
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                tvCharCount.setText(String.valueOf(140 - s.length() - replyUser.length()));
+            }
+
+            public void afterTextChanged(Editable s) {
+            }
+        };
+        etName.addTextChangedListener(mTextEditorWatcher);
+
+        // Configure dialog button (OK)
+        alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, "OK",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String reply = etName.getText().toString();
+                        reply = replyUser + " " + reply; //TODO: figure out if it's a problem, now reply must be shorter
+                        client.reply(reply, inReplyToStatusId, new JsonHttpResponseHandler() {
+                            @Override
+                            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                                Intent intent = new Intent(context, TimeLineActivity.class);
+                                context.startActivity(intent);
+                            }
+
+                            @Override
+                            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                                Log.e("ComposeTweet onFailure", "Failure replying", throwable);
+                            }
+                        });
+                    }
+                });
+
+        // Configure dialog button (Cancel)
+        alertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Cancel",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) { dialog.cancel(); }
+                });
+
+        // Display the dialog
+        alertDialog.show();
+    }
+
 }

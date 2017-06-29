@@ -1,14 +1,22 @@
 package com.codepath.apps.restclienttemplate;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.TextView;
 
 import com.codepath.apps.restclienttemplate.models.Tweet;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -101,7 +109,7 @@ public class TimeLineActivity extends AppCompatActivity {
     }
 
 
-    public void onComposeAction(MenuItem mi) {
+   /* public void onComposeAction(MenuItem mi) {
         // first parameter is the context, second is the class of the activity to launch
         Intent i = new Intent(TimeLineActivity.this, ComposeTweetActivity.class);
         i.putExtra("replying", false);
@@ -110,6 +118,67 @@ public class TimeLineActivity extends AppCompatActivity {
         //i.putExtra(ITEM_POSITION, position);
         // brings up the edit activity with the expectation of a result
         startActivityForResult(i, REQUEST_CODE);
+    }*/
+
+    public void onComposeAction(MenuItem mi) {
+        // inflate message_item.xml view
+        View messageView = LayoutInflater.from(this).
+                inflate(R.layout.compose_modal, null);
+        // Create alert dialog builder
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        // set message_item.xml to AlertDialog builder
+        alertDialogBuilder.setView(messageView);
+
+        // Create alert dialog
+
+        final AlertDialog alertDialog = alertDialogBuilder.create();
+        final EditText etName = (EditText) messageView.findViewById(R.id.etTweet);
+        final TwitterClient client = new TwitterClient(this);
+        final TextView tvReplyTo = (TextView) messageView.findViewById(R.id.tvReplyTo);
+        tvReplyTo.setVisibility(View.GONE);
+        final TextView tvCharCount = (TextView) messageView.findViewById(R.id.tvCharCount);
+
+
+        TextWatcher mTextEditorWatcher = new TextWatcher() {
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                tvCharCount.setText(String.valueOf(140 - s.length()));
+            }
+
+            public void afterTextChanged(Editable s) {
+            }
+        };
+        etName.addTextChangedListener(mTextEditorWatcher);
+
+        // Configure dialog button (OK)
+        alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, "OK",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        client.sendTweet(etName.getText().toString(), new JsonHttpResponseHandler() {
+                            @Override
+                            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                                Intent intent = new Intent(getApplicationContext(), TimeLineActivity.class);
+                                getApplicationContext().startActivity(intent);
+                            }
+
+                            @Override
+                            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                                Log.e("ComposeTweet onFailure", "Failure replying", throwable);
+                            }
+                        });
+                    }
+                });
+
+        // Configure dialog button (Cancel)
+        alertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Cancel",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) { dialog.cancel(); }
+                });
+
+        // Display the dialog
+        alertDialog.show();
     }
 
     @Override
