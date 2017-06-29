@@ -33,23 +33,28 @@ public class ComposeTweetActivity extends AppCompatActivity {
         TextView tvReplyTo = (TextView) findViewById(R.id.tvReplyTo);
         Intent intent = getIntent();
         replying = intent.getBooleanExtra("replying", false);
+        final TextView tvCharCount = (TextView) findViewById(R.id.tvCharCount);
         if (replying) {
             replyUser = intent.getStringExtra("replyUser"); //TODO: this is not necessarily the "original" tweeter
             inReplyToStatusId = intent.getLongExtra("in_reply_to_status_id", 0);
             tvReplyTo.setText("Replying to " + replyUser);
+            tvCharCount.setText(String.valueOf(140 - replyUser.length()));
         } else {
             tvReplyTo.setVisibility(View.GONE);
         }
 
         EditText etName = (EditText) findViewById(R.id.etTweet);
-        final TextView tvCharCount = (TextView) findViewById(R.id.tvCharCount);
+
         TextWatcher mTextEditorWatcher = new TextWatcher() {
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
-
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 //This sets a textview to the current length
-                tvCharCount.setText(String.valueOf(140 - s.length()));
+                if (replying) {
+                    tvCharCount.setText(String.valueOf(140 - s.length() - replyUser.length()));
+                } else {
+                    tvCharCount.setText(String.valueOf(140 - s.length()));
+                }
             }
 
             public void afterTextChanged(Editable s) {

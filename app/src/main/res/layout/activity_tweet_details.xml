@@ -61,4 +61,12 @@
         android:layout_below="@+id/tvBody"
         android:layout_centerHorizontal="true"
         app:srcCompat="@drawable/ic_retweet_stroke" />
+
+    <ImageView
+        android:id="@+id/ivReply"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_alignStart="@+id/tvBody"
+        android:layout_below="@+id/tvBody"
+        app:srcCompat="@drawable/ic_reply" />
 </RelativeLayout>

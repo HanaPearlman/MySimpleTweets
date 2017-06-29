@@ -35,6 +35,8 @@ public class TweetDetailsActivity extends AppCompatActivity {
         TextView tweetBody = (TextView) findViewById(R.id.tvBody);
         ImageView profileImage = (ImageView) findViewById(R.id.ivProfileImage);
         ImageView retweet = (ImageView) findViewById(R.id.ibRetweet);
+        ImageView reply = (ImageView) findViewById(R.id.ivReply);
+
         if (tweet.retweeted) {
             retweet.setImageResource(R.drawable.ic_retweet);
         } else {
@@ -58,10 +60,20 @@ public class TweetDetailsActivity extends AppCompatActivity {
                 .placeholder(R.drawable.ic_placeholder)
                 .into(profileImage);
 
+        reply.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), ComposeTweetActivity.class);
+                intent.putExtra("replying", true);
+                intent.putExtra("replyUser", tweet.user.screenName);
+                intent.putExtra("inReplyToStatusId", tweet.uid);
+                getApplicationContext().startActivity(intent);
+            }
+        });
+
         retweet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //TODO: add network call to retweet the tweet, Toast success
                 TwitterClient client = TwitterApp.getRestClient();
                 client.retweet(id, new JsonHttpResponseHandler() {
 
