@@ -8,10 +8,10 @@
 
     <ImageView
         android:id="@+id/ivProfileImage"
-        android:layout_width="75dp"
-        android:layout_height="75dp"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
         app:srcCompat="@android:color/black"
-        android:layout_marginLeft="5dp"
+        android:layout_marginLeft="4dp"
         tools:layout_editor_absoluteX="4dp"
         tools:layout_editor_absoluteY="2dp"
         />
@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_toEndOf="@+id/ivProfileImage"
-        android:layout_marginLeft="5dp"
+        android:layout_marginLeft="4dp"
         android:text="TextView"
         android:textSize="24sp"
         android:textStyle="bold" />
