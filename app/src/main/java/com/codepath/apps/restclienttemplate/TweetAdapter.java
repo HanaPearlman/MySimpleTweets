@@ -120,14 +120,13 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
                     if (position != RecyclerView.NO_POSITION) {
                         // get the movie at the position
                         Tweet tweet = mTweets.get(position);
-                        // create intent for the new activity
-                        //Intent intent = new Intent(context, MovieDetailsActivity.class);
-                        // serialize the movie using parceler, use its short name as a key
-                        //intent.putExtra(Movie.class.getSimpleName(), Parcels.wrap(movie));
-                        // show the activity
-                        //context.startActivity(intent);
-
-                        //TODO: create new activity for replying to a tweet
+                        String replyUser = tweet.user.screenName;
+                        long id = tweet.uid;
+                        Intent intent = new Intent(context, ComposeTweetActivity.class);
+                        intent.putExtra("replyUser", replyUser);
+                        intent.putExtra("replying", true);
+                        intent.putExtra("in_reply_to_status_id", id);
+                        context.startActivity(intent);
                     }
                 }
             });

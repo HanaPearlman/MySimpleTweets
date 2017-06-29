@@ -104,6 +104,7 @@ public class TimeLineActivity extends AppCompatActivity {
     public void onComposeAction(MenuItem mi) {
         // first parameter is the context, second is the class of the activity to launch
         Intent i = new Intent(TimeLineActivity.this, ComposeTweetActivity.class);
+        i.putExtra("replying", false);
         // put "extras" into the bundle for access in the edit activity
         //i.putExtra(ITEM_TEXT, items.get(position));
         //i.putExtra(ITEM_POSITION, position);

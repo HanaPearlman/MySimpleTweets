@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:hint="What's happening?"
         android:inputType="text"
-        android:layout_alignParentTop="true"
+        android:layout_below="@+id/tvReplyTo"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true" />
 
@@ -33,5 +33,13 @@
         android:layout_alignParentStart="true"
         android:text="Cancel"
         android:onClick="onCancel"/>
+
+    <TextView
+        android:id="@+id/tvReplyTo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:text="Text" />
 
 </RelativeLayout>
