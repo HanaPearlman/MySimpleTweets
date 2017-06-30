@@ -44,7 +44,9 @@
         android:layout_below="@+id/ivProfileImage"
         android:layout_marginRight="4dp"
         android:text="TextView"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:autoLink="all"
+        android:linksClickable="true"/>
 
     <ImageView
         android:id="@+id/ibFavorite"

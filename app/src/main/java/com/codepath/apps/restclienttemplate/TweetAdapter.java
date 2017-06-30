@@ -168,7 +168,7 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
             relativeDate = DateUtils.getRelativeTimeSpanString(dateMillis,
                     System.currentTimeMillis(), DateUtils.SECOND_IN_MILLIS).toString();
 
-            // TODO: this is very hacky, please fix
+            // TODO: this is very hacky
             relativeDate = relativeDate.replace(" seconds", "s");
             relativeDate = relativeDate.replace(" second", "s");
             relativeDate = relativeDate.replace(" minutes", "m");
