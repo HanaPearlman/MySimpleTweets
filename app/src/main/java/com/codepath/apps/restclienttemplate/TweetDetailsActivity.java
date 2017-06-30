@@ -24,10 +24,11 @@ import org.json.JSONObject;
 import org.parceler.Parcels;
 
 import cz.msebera.android.httpclient.Header;
+    import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
     public class TweetDetailsActivity extends AppCompatActivity {
 
-    TwitterClient client; //should I get rid of this? and add context?
+    TwitterClient client;
     Context context;
     Tweet tweet;
 
@@ -66,6 +67,7 @@ import cz.msebera.android.httpclient.Header;
         Glide.with(this)
                 .load(tweet.user.profileImageUrl)
                 .placeholder(R.drawable.ic_placeholder)
+                .bitmapTransform(new RoundedCornersTransformation(context, 10, 0))
                 .into(profileImage);
 
         setReplyOnClickListener();
@@ -93,7 +95,6 @@ import cz.msebera.android.httpclient.Header;
 
                 final AlertDialog alertDialog = alertDialogBuilder.create();
                 final EditText etName = (EditText) messageView.findViewById(R.id.etTweet);
-                final TwitterClient client = TwitterApp.getRestClient();
                 final TextView tvReplyTo = (TextView) messageView.findViewById(R.id.tvReplyTo);
                 final TextView tvCharCount = (TextView) messageView.findViewById(R.id.tvCharCount);
 
@@ -134,11 +135,13 @@ import cz.msebera.android.httpclient.Header;
                             }
                         });
 
-                // Configure dialog button (Cancel)
-                alertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Cancel",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) { dialog.cancel(); }
-                        });
+                ImageView ivCancel = (ImageView) messageView.findViewById(R.id.ivCancel);
+                ivCancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        alertDialog.cancel();
+                    }
+                });
 
                 // Display the dialog
                 alertDialog.show();
@@ -151,7 +154,6 @@ import cz.msebera.android.httpclient.Header;
         favorite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                TwitterClient client = TwitterApp.getRestClient();
                 client.favorite(tweet.favorited, tweet.uid, new JsonHttpResponseHandler() {
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
@@ -163,8 +165,8 @@ import cz.msebera.android.httpclient.Header;
                             Toast.makeText(context, "Unfavorited", Toast.LENGTH_SHORT);
                         }
 
-                        Intent intent = new Intent(getApplicationContext(), TimeLineActivity.class);
-                        getApplicationContext().startActivity(intent);
+                        Intent intent = new Intent(context, TimeLineActivity.class);
+                        context.startActivity(intent);
                     }
 
                     @Override
@@ -181,7 +183,6 @@ import cz.msebera.android.httpclient.Header;
         retweet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                TwitterClient client = TwitterApp.getRestClient();
                 client.retweet(tweet.uid, new JsonHttpResponseHandler() {
 
                     @Override
@@ -189,14 +190,14 @@ import cz.msebera.android.httpclient.Header;
                         super.onSuccess(statusCode, headers, response);
                         //mark tweet as retweeted?
                         tweet.retweeted = true;
-                        Toast.makeText(getApplicationContext(), "Retweeted", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(getApplicationContext(), TimeLineActivity.class);
-                        getApplicationContext().startActivity(intent);
+                        Toast.makeText(context, "Retweeted", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(context, TimeLineActivity.class);
+                        context.startActivity(intent);
                     }
 
                     @Override
                     public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                        Toast.makeText(getApplicationContext(), "Failed to Retweet", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, "Failed to Retweet", Toast.LENGTH_SHORT).show();
                         Log.e("TweetDetails", "Failed to retweet", throwable);
                     }
                 });

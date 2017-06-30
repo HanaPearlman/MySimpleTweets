@@ -11,7 +11,7 @@
         android:layout_width="72dp"
         android:layout_height="72dp"
         app:srcCompat="@android:color/black"
-        android:layout_marginLeft="4dp"
+        android:layout_marginLeft="8dp"
         tools:layout_editor_absoluteX="4dp"
         tools:layout_editor_absoluteY="2dp"
         />
@@ -31,10 +31,9 @@
         android:id="@+id/tvScreenName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="TextView"
         android:layout_below="@+id/tvUserName"
-        android:layout_toEndOf="@+id/ivProfileImage"
-        android:layout_alignLeft="@+id/tvUserName"
-        android:text="TextView" />
+        android:layout_alignStart="@+id/tvUserName" />
 
     <TextView
         android:id="@+id/tvBody"

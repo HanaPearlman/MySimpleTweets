@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Locale;
 
 import cz.msebera.android.httpclient.Header;
+import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
 /**
  * Created by hanapearlman on 6/26/17.
@@ -64,6 +65,8 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
         Glide.with(context)
                 .load(tweet.user.profileImageUrl)
                 .placeholder(R.drawable.ic_placeholder)
+                //.bitmapTransform(new CropCircleTransformation(context))
+                .bitmapTransform(new RoundedCornersTransformation(context, 10, 0))
                 .into(holder.ivProfileImage);
 
         holder.tvUsername.setText(tweet.user.name);
@@ -209,7 +212,7 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
 
         final AlertDialog alertDialog = alertDialogBuilder.create();
         final EditText etName = (EditText) messageView.findViewById(R.id.etTweet);
-        final TwitterClient client = new TwitterClient(context);
+        final TwitterClient client = TwitterApp.getRestClient();
         final TextView tvReplyTo = (TextView) messageView.findViewById(R.id.tvReplyTo);
         final TextView tvCharCount = (TextView) messageView.findViewById(R.id.tvCharCount);
 
@@ -250,11 +253,13 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
                     }
                 });
 
-        // Configure dialog button (Cancel)
-        alertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Cancel",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) { dialog.cancel(); }
-                });
+        ImageView ivCancel = (ImageView) messageView.findViewById(R.id.ivCancel);
+        ivCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                alertDialog.cancel();
+            }
+        });
 
         // Display the dialog
         alertDialog.show();

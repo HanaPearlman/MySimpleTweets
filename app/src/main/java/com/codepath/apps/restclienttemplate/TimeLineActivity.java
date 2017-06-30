@@ -1,11 +1,13 @@
 package com.codepath.apps.restclienttemplate;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -16,6 +18,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.codepath.apps.restclienttemplate.models.Tweet;
@@ -38,6 +41,7 @@ public class TimeLineActivity extends AppCompatActivity {
     RecyclerView rvTweets;
     private final int REQUEST_CODE = 20;
     private SwipeRefreshLayout swipeContainer;
+    Context context;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -49,6 +53,7 @@ public class TimeLineActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        context = this;
         setContentView(R.layout.activity_time_line);
 
         // Lookup the swipe container view
@@ -82,6 +87,9 @@ public class TimeLineActivity extends AppCompatActivity {
         rvTweets.setLayoutManager(new LinearLayoutManager(this));
         rvTweets.setAdapter(tweetAdapter);
         populateTimeline();
+
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(context, DividerItemDecoration.VERTICAL);
+        rvTweets.addItemDecoration(dividerItemDecoration);
     }
 
     public void fetchTimelineAsync(int page) {
@@ -109,19 +117,15 @@ public class TimeLineActivity extends AppCompatActivity {
     }
 
     public void onComposeAction(MenuItem mi) {
-        // inflate message_item.xml view
         View messageView = LayoutInflater.from(this).
                 inflate(R.layout.compose_modal, null);
-        // Create alert dialog builder
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
-        // set message_item.xml to AlertDialog builder
         alertDialogBuilder.setView(messageView);
 
         // Create alert dialog
-
         final AlertDialog alertDialog = alertDialogBuilder.create();
         final EditText etName = (EditText) messageView.findViewById(R.id.etTweet);
-        final TwitterClient client = new TwitterClient(this);
+        final TwitterClient client = TwitterApp.getRestClient();
         final TextView tvCharCount = (TextView) messageView.findViewById(R.id.tvCharCount);
 
         final TextView tvReplyTo = (TextView) messageView.findViewById(R.id.tvReplyTo);
@@ -135,8 +139,7 @@ public class TimeLineActivity extends AppCompatActivity {
                 tvCharCount.setText(String.valueOf(140 - s.length()));
             }
 
-            public void afterTextChanged(Editable s) {
-            }
+            public void afterTextChanged(Editable s) {}
         };
         etName.addTextChangedListener(mTextEditorWatcher);
 
@@ -148,8 +151,8 @@ public class TimeLineActivity extends AppCompatActivity {
                         client.sendTweet(etName.getText().toString(), new JsonHttpResponseHandler() {
                             @Override
                             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                                Intent intent = new Intent(getApplicationContext(), TimeLineActivity.class);
-                                getApplicationContext().startActivity(intent);
+                                Intent intent = new Intent(context, TimeLineActivity.class);
+                                context.startActivity(intent);
                             }
 
                             @Override
@@ -160,11 +163,13 @@ public class TimeLineActivity extends AppCompatActivity {
                     }
                 });
 
-        // Configure dialog button (Cancel)
-        alertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Cancel",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) { dialog.cancel(); }
-                });
+        ImageView ivCancel = (ImageView) messageView.findViewById(R.id.ivCancel);
+        ivCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                alertDialog.cancel();
+            }
+        });
 
         // Display the dialog
         alertDialog.show();
