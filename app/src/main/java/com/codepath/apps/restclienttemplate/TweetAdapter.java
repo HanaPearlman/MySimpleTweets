@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.codepath.apps.restclienttemplate.models.Tweet;
@@ -241,12 +242,14 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
                         client.reply(reply, inReplyToStatusId, new JsonHttpResponseHandler() {
                             @Override
                             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                                Toast.makeText(context, "Reply sent", Toast.LENGTH_SHORT).show();
                                 Intent intent = new Intent(context, TimeLineActivity.class);
                                 context.startActivity(intent);
                             }
 
                             @Override
                             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                                Toast.makeText(context, "Reply failed", Toast.LENGTH_SHORT).show();
                                 Log.e("ComposeTweet onFailure", "Failure replying", throwable);
                             }
                         });

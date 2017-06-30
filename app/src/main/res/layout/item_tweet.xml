@@ -69,7 +69,7 @@
         android:layout_height="24dp"
         android:layout_alignParentLeft="true"
         android:layout_alignTop="@+id/ibReply"
-        android:layout_marginLeft="168dp"
+        android:layout_marginLeft="164dp"
         app:srcCompat="@drawable/ic_retweet_stroke" />
 
     <TextView
@@ -87,7 +87,7 @@
         android:layout_height="24dp"
         android:layout_alignParentLeft="true"
         android:layout_alignTop="@+id/ibReply"
-        android:layout_marginLeft="296dp"
+        android:layout_marginLeft="288dp"
         app:srcCompat="@drawable/ic_favorite_stroke" />
 
     <TextView

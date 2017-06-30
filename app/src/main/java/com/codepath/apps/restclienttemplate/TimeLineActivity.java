@@ -20,6 +20,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.codepath.apps.restclienttemplate.models.Tweet;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -151,13 +152,15 @@ public class TimeLineActivity extends AppCompatActivity {
                         client.sendTweet(etName.getText().toString(), new JsonHttpResponseHandler() {
                             @Override
                             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                                Toast.makeText(context, "Tweet sent", Toast.LENGTH_SHORT).show();
                                 Intent intent = new Intent(context, TimeLineActivity.class);
                                 context.startActivity(intent);
                             }
 
                             @Override
                             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                                Log.e("ComposeTweet onFailure", "Failure replying", throwable);
+                                Toast.makeText(context, "Tweet failed", Toast.LENGTH_SHORT).show();
+                                Log.e("ComposeTweet onFailure", "Failure tweeting", throwable);
                             }
                         });
                     }

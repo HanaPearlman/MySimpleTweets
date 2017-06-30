@@ -133,12 +133,14 @@ import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
                                 client.reply(reply, inReplyToStatusId, new JsonHttpResponseHandler() {
                                     @Override
                                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                                        Toast.makeText(context, "Reply sent", Toast.LENGTH_SHORT).show();
                                         Intent intent = new Intent(context, TimeLineActivity.class);
                                         context.startActivity(intent);
                                     }
 
                                     @Override
                                     public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                                        Toast.makeText(context, "Reply failed", Toast.LENGTH_SHORT).show();
                                         Log.e("ComposeTweet onFailure", "Failure replying", throwable);
                                     }
                                 });
@@ -181,6 +183,7 @@ import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
                     @Override
                     public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                        Toast.makeText(context, "Favorite failed", Toast.LENGTH_SHORT).show();
                         Log.e("TweetDetails", "Failed to un-favorite", throwable);
                     }
                 });
