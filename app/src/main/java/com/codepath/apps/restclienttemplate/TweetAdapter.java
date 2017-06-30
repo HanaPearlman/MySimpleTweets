@@ -37,7 +37,7 @@ import cz.msebera.android.httpclient.Header;
 public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> {
 
     private static List<Tweet> mTweets;
-    private static Context context;     //IS THIS OK?
+    private static Context context;
 
     // pass in the Tweets array in the constructor
     public TweetAdapter(List<Tweet> tweets) {
@@ -120,25 +120,6 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
             ibRetweet = (ImageView) itemView.findViewById(R.id.ibRetweet);
             ibFavorite = (ImageView) itemView.findViewById(R.id.ibFavorite);
             ibReply = (ImageView) itemView.findViewById(R.id.ibReply);
-
-           /* ibReply.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    int position = getAdapterPosition();
-                    // make sure the position is valid
-                    if (position != RecyclerView.NO_POSITION) {
-                        // get the movie at the position
-                        Tweet tweet = mTweets.get(position);
-                        String replyUser = tweet.user.screenName;
-                        long id = tweet.uid;
-                        Intent intent = new Intent(context, ComposeTweetActivity.class);
-                        intent.putExtra("replyUser", replyUser);
-                        intent.putExtra("replying", true);
-                        intent.putExtra("in_reply_to_status_id", id);
-                        context.startActivity(intent);
-                    }
-                }
-            });*/
 
             ibReply.setOnClickListener(new View.OnClickListener() {
                 @Override

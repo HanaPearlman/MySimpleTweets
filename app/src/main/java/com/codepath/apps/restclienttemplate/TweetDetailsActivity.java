@@ -72,11 +72,7 @@ public class TweetDetailsActivity extends AppCompatActivity {
         reply.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Intent intent = new Intent(getApplicationContext(), ComposeTweetActivity.class);
-                //intent.putExtra("replying", true);
-                //intent.putExtra("replyUser", tweet.user.screenName);
-                //intent.putExtra("inReplyToStatusId", tweet.uid);
-                //getApplicationContext().startActivity(intent);
+
                 final long inReplyToStatusId = tweet.uid;
                 final String replyUser = tweet.user.screenName;
 

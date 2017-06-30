@@ -47,8 +47,8 @@
 
     <ImageView
         android:id="@+id/ibFavorite"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
         android:layout_alignParentEnd="true"
         android:layout_below="@+id/tvBody"
         android:layout_marginRight="10dp"
@@ -56,16 +56,16 @@
 
     <ImageView
         android:id="@+id/ibRetweet"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
         android:layout_below="@+id/tvBody"
         android:layout_centerHorizontal="true"
         app:srcCompat="@drawable/ic_retweet_stroke" />
 
     <ImageView
         android:id="@+id/ivReply"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
         android:layout_alignStart="@+id/tvBody"
         android:layout_below="@+id/tvBody"
         app:srcCompat="@drawable/ic_reply" />
