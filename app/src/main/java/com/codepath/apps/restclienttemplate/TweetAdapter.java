@@ -150,10 +150,6 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
                     }
                 }
             });
-
-
-            //TODO: maybe make on-click listeners for profile, username, screen-name, body
-
         }
     }
 
@@ -233,12 +229,12 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
         etName.addTextChangedListener(mTextEditorWatcher);
 
         // Configure dialog button (OK)
-        alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, "OK",
+        alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, "Tweet",
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         String reply = etName.getText().toString();
-                        reply = replyUser + " " + reply; //TODO: figure out if it's a problem, now reply must be shorter
+                        reply = replyUser + " " + reply;
                         client.reply(reply, inReplyToStatusId, new JsonHttpResponseHandler() {
                             @Override
                             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
@@ -263,5 +259,4 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
         // Display the dialog
         alertDialog.show();
     }
-
 }

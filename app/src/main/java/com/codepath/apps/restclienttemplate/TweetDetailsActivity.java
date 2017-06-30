@@ -1,6 +1,6 @@
-package com.codepath.apps.restclienttemplate;
+    package com.codepath.apps.restclienttemplate;
 
-import android.content.Context;
+    import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -25,10 +25,11 @@ import org.parceler.Parcels;
 
 import cz.msebera.android.httpclient.Header;
 
-public class TweetDetailsActivity extends AppCompatActivity {
+    public class TweetDetailsActivity extends AppCompatActivity {
 
     TwitterClient client; //should I get rid of this? and add context?
     Context context;
+    Tweet tweet;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,16 +37,15 @@ public class TweetDetailsActivity extends AppCompatActivity {
         context = this;
         setContentView(R.layout.activity_tweet_details);
         Intent intent = getIntent();
-        final Tweet tweet = (Tweet) Parcels.unwrap(intent.getParcelableExtra("tweet"));
+        tweet = (Tweet) Parcels.unwrap(intent.getParcelableExtra("tweet"));
 
         client = TwitterApp.getRestClient();
         TextView userName = (TextView) findViewById(R.id.tvUserName);
         TextView screenName = (TextView) findViewById(R.id.tvScreenName);
         TextView tweetBody = (TextView) findViewById(R.id.tvBody);
         ImageView profileImage = (ImageView) findViewById(R.id.ivProfileImage);
-        ImageView retweet = (ImageView) findViewById(R.id.ibRetweet);
-        ImageView reply = (ImageView) findViewById(R.id.ivReply);
 
+        ImageView retweet = (ImageView) findViewById(R.id.ibRetweet);
         if (tweet.retweeted) {
             retweet.setImageResource(R.drawable.ic_retweet);
         } else {
@@ -62,17 +62,22 @@ public class TweetDetailsActivity extends AppCompatActivity {
         userName.setText(tweet.user.name);
         screenName.setText(tweet.user.screenName);
         tweetBody.setText(tweet.body);
-        final long id = tweet.uid;
 
         Glide.with(this)
                 .load(tweet.user.profileImageUrl)
                 .placeholder(R.drawable.ic_placeholder)
                 .into(profileImage);
 
+        setReplyOnClickListener();
+        setFavoriteOnClickListener();
+        setRetweetOnClickListener();
+    }
+
+    public void setReplyOnClickListener() {
+        ImageView reply = (ImageView) findViewById(R.id.ivReply);
         reply.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 final long inReplyToStatusId = tweet.uid;
                 final String replyUser = tweet.user.screenName;
 
@@ -108,12 +113,12 @@ public class TweetDetailsActivity extends AppCompatActivity {
                 etName.addTextChangedListener(mTextEditorWatcher);
 
                 // Configure dialog button (OK)
-                alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, "OK",
+                alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, "Tweet",
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 String reply = etName.getText().toString();
-                                reply = replyUser + " " + reply; //TODO: figure out if it's a problem, now reply must be shorter
+                                reply = replyUser + " " + reply;
                                 client.reply(reply, inReplyToStatusId, new JsonHttpResponseHandler() {
                                     @Override
                                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
@@ -139,12 +144,45 @@ public class TweetDetailsActivity extends AppCompatActivity {
                 alertDialog.show();
             }
         });
+    }
 
+    public void setFavoriteOnClickListener() {
+        ImageView favorite = (ImageView) findViewById(R.id.ibFavorite);
+        favorite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                TwitterClient client = TwitterApp.getRestClient();
+                client.favorite(tweet.favorited, tweet.uid, new JsonHttpResponseHandler() {
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                        super.onSuccess(statusCode, headers, response);
+                        tweet.favorited = !tweet.favorited;
+                        if (tweet.favorited) {
+                            Toast.makeText(context, "Favorited", Toast.LENGTH_SHORT);
+                        } else {
+                            Toast.makeText(context, "Unfavorited", Toast.LENGTH_SHORT);
+                        }
+
+                        Intent intent = new Intent(getApplicationContext(), TimeLineActivity.class);
+                        getApplicationContext().startActivity(intent);
+                    }
+
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                        Log.e("TweetDetails", "Failed to un-favorite", throwable);
+                    }
+                });
+            }
+        });
+    }
+
+    public void setRetweetOnClickListener() {
+        ImageView retweet = (ImageView) findViewById(R.id.ibRetweet);
         retweet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 TwitterClient client = TwitterApp.getRestClient();
-                client.retweet(id, new JsonHttpResponseHandler() {
+                client.retweet(tweet.uid, new JsonHttpResponseHandler() {
 
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
@@ -162,53 +200,6 @@ public class TweetDetailsActivity extends AppCompatActivity {
                         Log.e("TweetDetails", "Failed to retweet", throwable);
                     }
                 });
-            }
-        });
-
-        favorite.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //TODO: add network call to favorite the tweet, Toast success
-                TwitterClient client = TwitterApp.getRestClient();
-                if (tweet.favorited) {
-                    client.unfavorite(id, new JsonHttpResponseHandler() {
-
-                        @Override
-                        public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                            super.onSuccess(statusCode, headers, response);
-                            tweet.favorited = false;
-                            Toast.makeText(getApplicationContext(), "Unfavorited", Toast.LENGTH_SHORT).show(); //might want to have this return an intent? so it doesn't scroll back to the top?
-                            Intent intent = new Intent(getApplicationContext(), TimeLineActivity.class);
-                            getApplicationContext().startActivity(intent);
-                        }
-
-                        @Override
-                        public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                            Toast.makeText(getApplicationContext(), "Failed to un-favorite", Toast.LENGTH_SHORT).show();
-                            Log.e("TweetDetails", "Failed to un-favorite", throwable);
-                        }
-                    });
-                } else {
-                    client.favorite(id, new JsonHttpResponseHandler() {
-
-                        @Override
-                        public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                            super.onSuccess(statusCode, headers, response);
-                            tweet.favorited = true;
-                            //mark tweet as faved?
-                            Toast.makeText(getApplicationContext(), "Favorited", Toast.LENGTH_SHORT).show(); //might want to have this return an intent? so it doesn't scroll back to the top?
-                            Intent intent = new Intent(getApplicationContext(), TimeLineActivity.class);
-                            getApplicationContext().startActivity(intent);
-                        }
-
-                        @Override
-                        public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                            Toast.makeText(getApplicationContext(), "Failed to Favorite", Toast.LENGTH_SHORT).show();
-                            Log.e("TweetDetails", "Failed to favorite", throwable);
-                        }
-                    });
-                }
-
             }
         });
     }

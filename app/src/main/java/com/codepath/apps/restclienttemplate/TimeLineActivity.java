@@ -122,9 +122,10 @@ public class TimeLineActivity extends AppCompatActivity {
         final AlertDialog alertDialog = alertDialogBuilder.create();
         final EditText etName = (EditText) messageView.findViewById(R.id.etTweet);
         final TwitterClient client = new TwitterClient(this);
+        final TextView tvCharCount = (TextView) messageView.findViewById(R.id.tvCharCount);
+
         final TextView tvReplyTo = (TextView) messageView.findViewById(R.id.tvReplyTo);
         tvReplyTo.setVisibility(View.GONE);
-        final TextView tvCharCount = (TextView) messageView.findViewById(R.id.tvCharCount);
 
 
         TextWatcher mTextEditorWatcher = new TextWatcher() {
@@ -140,7 +141,7 @@ public class TimeLineActivity extends AppCompatActivity {
         etName.addTextChangedListener(mTextEditorWatcher);
 
         // Configure dialog button (OK)
-        alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, "OK",
+        alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, "Tweet",
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -177,9 +178,6 @@ public class TimeLineActivity extends AppCompatActivity {
             tweets.add(0, tweet);
             tweetAdapter.notifyItemInserted(0);
             rvTweets.scrollToPosition(0);
-            //Toast.makeText(this, "Tweet successful", Toast.LENGTH_SHORT).show();
-            // Toast the name to display temporarily on screen
-            // TODO: toast removed but could do a notification at the bottom
         }
     }
 
@@ -192,13 +190,8 @@ public class TimeLineActivity extends AppCompatActivity {
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                //Log.d("TwitterClient", response.toString());
-                // iterate through JSON
-                // deserialize each object
+
                 for (int i = 0; i < response.length(); i++) {
-                    //convert each to Tweet model
-                    //add tweet model to data source
-                    //notify adapter of change
                     try {
                         Tweet tweet = Tweet.fromJSON(response.getJSONObject(i));
                         tweets.add(tweet);
