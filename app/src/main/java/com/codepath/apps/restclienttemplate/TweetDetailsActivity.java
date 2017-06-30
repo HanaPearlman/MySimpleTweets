@@ -172,9 +172,9 @@ import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
                         super.onSuccess(statusCode, headers, response);
                         tweet.favorited = !tweet.favorited;
                         if (tweet.favorited) {
-                            Toast.makeText(context, "Favorited", Toast.LENGTH_SHORT);
+                            Toast.makeText(context, "Favorited", Toast.LENGTH_SHORT).show();
                         } else {
-                            Toast.makeText(context, "Unfavorited", Toast.LENGTH_SHORT);
+                            Toast.makeText(context, "Unfavorited", Toast.LENGTH_SHORT).show();
                         }
 
                         Intent intent = new Intent(context, TimeLineActivity.class);
