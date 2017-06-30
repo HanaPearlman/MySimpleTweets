@@ -19,6 +19,8 @@ public class Tweet {
     public int retweetCount;
     public boolean favorited;
     public boolean retweeted;
+    public boolean includesMedia;
+    public String mediaUrl;
 
     public Tweet() {
 
@@ -37,7 +39,19 @@ public class Tweet {
         tweet.favorited = jsonObject.getBoolean("favorited");
         tweet.retweeted = jsonObject.getBoolean("retweeted");
 
-        return tweet;
 
+        JSONObject entities = jsonObject.getJSONObject("entities");
+        if(entities.has("media")) {
+            tweet.includesMedia = entities.getJSONArray("media").length() > 0;
+        }
+
+        if (tweet.includesMedia) {
+            tweet.mediaUrl = entities.getJSONArray("media").getJSONObject(0).getString("media_url");
+            tweet.mediaUrl += ":small";
+        } else {
+            tweet.mediaUrl = "";
+        }
+
+        return tweet;
     }
 }

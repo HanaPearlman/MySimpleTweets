@@ -24,7 +24,7 @@ import org.json.JSONObject;
 import org.parceler.Parcels;
 
 import cz.msebera.android.httpclient.Header;
-    import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
+import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
     public class TweetDetailsActivity extends AppCompatActivity {
 
@@ -58,6 +58,16 @@ import cz.msebera.android.httpclient.Header;
             favorite.setImageResource(R.drawable.ic_favorite);
         } else {
             favorite.setImageResource(R.drawable.ic_favorite_stroke);
+        }
+
+        ImageView media = (ImageView) findViewById(R.id.ivMedia);
+        if(tweet.includesMedia) {
+            Glide.with(this)
+                    .load(tweet.mediaUrl)
+                    .placeholder(R.drawable.ic_placeholder)
+                    .into(media);
+        } else {
+            media.setVisibility(View.GONE);
         }
 
         userName.setText(tweet.user.name);
