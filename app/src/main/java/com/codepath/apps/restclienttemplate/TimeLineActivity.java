@@ -4,12 +4,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -22,27 +20,19 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.codepath.apps.restclienttemplate.fragments.TweetsListFragment;
 import com.codepath.apps.restclienttemplate.models.Tweet;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.parceler.Parcels;
 
-import java.util.ArrayList;
-
 import cz.msebera.android.httpclient.Header;
 
-public class TimeLineActivity extends AppCompatActivity {
-
-    TwitterClient client;
-    TweetAdapter tweetAdapter;
-    ArrayList<Tweet> tweets;
-    RecyclerView rvTweets;
+public class TimeLineActivity extends AppCompatActivity implements TweetsListFragment.TweetSelectedListener {
     private final int REQUEST_CODE = 20;
-    private SwipeRefreshLayout swipeContainer;
-    Context context;
+    //private SwipeRefreshLayout swipeContainer;
+    //Context context;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -54,10 +44,10 @@ public class TimeLineActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        context = this;
-        setContentView(R.layout.activity_time_line);
+        //context = this;
+        setContentView(R.layout.activity_timeline);
 
-        // Lookup the swipe container view
+        /*// Lookup the swipe container view
         swipeContainer = (SwipeRefreshLayout) findViewById(R.id.swipeContainer);
         // Setup refresh listener which triggers new data loading
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -74,25 +64,19 @@ public class TimeLineActivity extends AppCompatActivity {
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
+        */
+        //get the view pager
+        ViewPager vpPager = (ViewPager) findViewById(R.id.viewpager);
 
+        //set the adapter for the pager
+        vpPager.setAdapter(new TweetsPagerAdapter(getSupportFragmentManager(), this));
 
-        client = TwitterApp.getRestClient();
+        //setup the tab layout
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
+        tabLayout.setupWithViewPager(vpPager);
 
-        // find the RecyclerView
-        rvTweets = (RecyclerView) findViewById(R.id.rvTweet);
-        // init the arrayList (data source)
-        tweets = new ArrayList<>();
-        // construct adapter from source
-        tweetAdapter = new TweetAdapter(tweets);
-        // RecyclerView setup (layout manager, adapter)
-        rvTweets.setLayoutManager(new LinearLayoutManager(this));
-        rvTweets.setAdapter(tweetAdapter);
-        populateTimeline();
-
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(context, DividerItemDecoration.VERTICAL);
-        rvTweets.addItemDecoration(dividerItemDecoration);
     }
-
+/*
     public void fetchTimelineAsync(int page) {
         // Send the network request to fetch the updated data
         // `client` here is an instance of Android Async HTTP
@@ -115,9 +99,10 @@ public class TimeLineActivity extends AppCompatActivity {
                 Log.d("DEBUG", "Fetch timeline error: " + throwable.toString());
             }
         });
-    }
+    }*/
 
     public void onComposeAction(MenuItem mi) {
+        final Context context = this;
         View messageView = LayoutInflater.from(this).
                 inflate(R.layout.compose_modal, null);
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
@@ -178,6 +163,12 @@ public class TimeLineActivity extends AppCompatActivity {
         alertDialog.show();
     }
 
+    public void onProfileView(MenuItem item) {
+        //launch profile view
+        Intent intent = new Intent(this, ProfileActivity.class);
+        startActivity(intent);
+    }
+/*
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // REQUEST_CODE is defined above
@@ -187,46 +178,12 @@ public class TimeLineActivity extends AppCompatActivity {
             tweetAdapter.notifyItemInserted(0);
             rvTweets.scrollToPosition(0);
         }
-    }
+    }*/
 
-    private void populateTimeline() {
-        client.getHomeTimeline(new JsonHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                Log.d("TwitterClient", response.toString());
-            }
-
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-
-                for (int i = 0; i < response.length(); i++) {
-                    try {
-                        Tweet tweet = Tweet.fromJSON(response.getJSONObject(i));
-                        tweets.add(tweet);
-                        tweetAdapter.notifyItemInserted(i - 1);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                Log.d("TwitterClient", responseString);
-                throwable.printStackTrace();
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                Log.d("TwitterClient", errorResponse.toString());
-                throwable.printStackTrace();
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
-                Log.d("TwitterClient", errorResponse.toString());
-                throwable.printStackTrace();
-            }
-        });
+    @Override
+    public void onTweetSelected(Tweet tweet) {
+        Intent intent = new Intent(this, TweetDetailsActivity.class);
+        intent.putExtra("tweet", Parcels.wrap(tweet));
+        startActivity(intent);
     }
 }

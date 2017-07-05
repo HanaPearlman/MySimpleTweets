@@ -1,35 +1,22 @@
 package com.codepath.apps.restclienttemplate;
 
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.text.format.DateUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.codepath.apps.restclienttemplate.models.Tweet;
-import com.loopj.android.http.JsonHttpResponseHandler;
-
-import org.json.JSONObject;
-import org.parceler.Parcels;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
 
-import cz.msebera.android.httpclient.Header;
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
 /**
@@ -38,12 +25,19 @@ import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
 public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> {
 
-    private static List<Tweet> mTweets;
-    private static Context context;
+    private List<Tweet> mTweets;
+    private Context context;
+    private TweetAdapterListener mListener;
+
+    //define an internface required by the ViewHolder
+    public interface TweetAdapterListener {
+        public void onItemSelected(View view, int position);
+    }
 
     // pass in the Tweets array in the constructor
-    public TweetAdapter(List<Tweet> tweets) {
+    public TweetAdapter(List<Tweet> tweets, TweetAdapterListener listener) {
         mTweets = tweets;
+        mListener = listener;
     }
 
     //for each row, inflate the layout and cache references into Viewholder
@@ -78,10 +72,8 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
         holder.tvFavoriteCount.setText("" + tweet.faveCount);
         if (tweet.favorited) {
             holder.ibFavorite.setImageResource(R.drawable.ic_favorite);
-            Log.i("TweetAdapter", "Favorited, should bold");
         } else {
             holder.ibFavorite.setImageResource(R.drawable.ic_favorite_stroke);
-            Log.i("TweetAdapter", "Not Favorited, no bold");
         }
 
         holder.tvRetweetCount.setText("" + tweet.retweetCount);
@@ -98,7 +90,7 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
     }
 
     //create the ViewHolder class
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder {
         public ImageView ivProfileImage;
         public TextView tvUsername;
         public TextView tvBody;
@@ -124,7 +116,8 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
             ibRetweet = (ImageView) itemView.findViewById(R.id.ibRetweet);
             ibFavorite = (ImageView) itemView.findViewById(R.id.ibFavorite);
             ibReply = (ImageView) itemView.findViewById(R.id.ibReply);
-
+    //TODO: come back to this later
+            /*
             ibReply.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -138,19 +131,18 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
                         showAlertDialogForCompose(replyUser, id);
                     }
                 }
-            });
+            }); */
 
             tvBody.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    int position = getAdapterPosition();
-                    // make sure the position is valid
-                    if (position != RecyclerView.NO_POSITION) {
-                        // get the movie at the position
-                        Tweet tweet = mTweets.get(position);
-                        Intent intent = new Intent(context, TweetDetailsActivity.class);
-                        intent.putExtra("tweet", Parcels.wrap(tweet));
-                        context.startActivity(intent);
+                    if (mListener != null) {
+                        int position = getAdapterPosition();
+                        // make sure the position is valid
+                        if (position != RecyclerView.NO_POSITION) {
+                            // get the movie at the position
+                            mListener.onItemSelected(view, position);
+                        }
                     }
                 }
             });
@@ -195,7 +187,7 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
         mTweets.addAll(list);
         notifyDataSetChanged();
     }
-
+/*
     private static void showAlertDialogForCompose(String originalUser, long replyID) {
 
         final long inReplyToStatusId = replyID;
@@ -266,5 +258,5 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
 
         // Display the dialog
         alertDialog.show();
-    }
+    }*/
 }

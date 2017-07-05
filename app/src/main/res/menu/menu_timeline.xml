@@ -3,10 +3,16 @@
 
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
+        android:id="@+id/miProfile"
+        android:icon="@drawable/ic_person_white_24dp"
+        android:title="Item"
+        app:showAsAction="ifRoom"
+        android:onClick="onProfileView"/>
+    <item
         android:id="@+id/icCompose"
         android:icon="@drawable/ic_compose"
         app:showAsAction="ifRoom"
         android:onClick="onComposeAction"
-        android:title="Compose">
-    </item>
+        android:title="Compose"
+    />
 </menu>
