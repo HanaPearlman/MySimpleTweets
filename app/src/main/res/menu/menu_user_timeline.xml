@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/icTimeline"
+        android:icon="@drawable/ic_home_timeline"
+        android:title="Item"
+        app:showAsAction="ifRoom"
+        android:onClick="onHomeTimeline"/>
+    <item
+        android:id="@+id/icCompose"
+        android:icon="@drawable/ic_compose"
+        app:showAsAction="ifRoom"
+        android:onClick="onComposeAction"
+        android:title="Compose"
+        />
+</menu>
