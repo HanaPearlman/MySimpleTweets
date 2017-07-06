@@ -16,8 +16,8 @@ public class TweetsPagerAdapter extends FragmentPagerAdapter {
 
     private String tabTitles[] = new String[] {"Home", "Mentions"};
     private Context context;
-    static HomeTimelineFragment htFragment = new HomeTimelineFragment();
-    static MentionsTimelineFragment mtFragment = new MentionsTimelineFragment();
+    HomeTimelineFragment htFragment = new HomeTimelineFragment();
+    MentionsTimelineFragment mtFragment = new MentionsTimelineFragment();
 
     public TweetsPagerAdapter(FragmentManager fm, Context context) {
         super(fm);

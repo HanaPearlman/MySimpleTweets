@@ -77,7 +77,6 @@ public class TimeLineActivity extends AppCompatActivity implements TweetsListFra
         //setup the tab layout
         TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
         tabLayout.setupWithViewPager(vpPager);
-
     }
 /*
     public void fetchTimelineAsync(int page) {

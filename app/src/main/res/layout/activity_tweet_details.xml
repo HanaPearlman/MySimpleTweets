@@ -58,17 +58,18 @@
             android:layout_width="28dp"
             android:layout_height="28dp"
             app:srcCompat="@drawable/ic_favorite_stroke"
-            android:layout_alignTop="@+id/ivReply"
-            android:layout_alignParentLeft="true"
-            android:layout_marginLeft="272dp"/>
+            android:layout_marginLeft="272dp"
+            android:layout_below="@+id/tvBody"
+            android:layout_alignEnd="@+id/tvBody"
+            android:layout_marginEnd="8dp" />
 
         <ImageView
             android:id="@+id/ibRetweet"
             android:layout_width="28dp"
             android:layout_height="28dp"
             app:srcCompat="@drawable/ic_retweet_stroke"
-            android:layout_alignTop="@+id/ivReply"
-            android:layout_toStartOf="@+id/tvRetweetCount" />
+            android:layout_below="@+id/tvBody"
+            android:layout_centerHorizontal="true" />
 
         <ImageView
             android:id="@+id/ivReply"
@@ -86,20 +87,5 @@
             android:layout_below="@+id/tvBody"
             app:srcCompat="@android:color/black" />
 
-        <TextView
-            android:id="@+id/tvRetweetCount"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="TextView"
-            android:layout_alignTop="@+id/ivReply"
-            android:layout_centerHorizontal="true"/>
-
-        <TextView
-            android:id="@+id/tvFaveCount"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toEndOf="@+id/ibFavorite"
-            android:text="TextView"
-            android:layout_alignTop="@+id/ivReply" />
     </RelativeLayout>
 </android.support.v4.widget.NestedScrollView>

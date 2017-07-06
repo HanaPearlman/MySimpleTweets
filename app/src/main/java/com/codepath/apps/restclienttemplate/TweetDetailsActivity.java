@@ -48,23 +48,10 @@ public class TweetDetailsActivity extends AppCompatActivity {
         TextView userName = (TextView) findViewById(R.id.tvUserName);
         TextView screenName = (TextView) findViewById(R.id.tvScreenName);
         TextView tweetBody = (TextView) findViewById(R.id.tvBody);
-        TextView tvFaveCount = (TextView) findViewById(R.id.tvFaveCount);
-        TextView tvRetweetCount = (TextView) findViewById(R.id.tvRetweetCount);
         ImageView profileImage = (ImageView) findViewById(R.id.ivProfileImage);
 
-        ImageView retweet = (ImageView) findViewById(R.id.ibRetweet);
-        if (tweet.retweeted) {
-            retweet.setImageResource(R.drawable.ic_retweet);
-        } else {
-            retweet.setImageResource(R.drawable.ic_retweet_stroke);
-        }
-
-        ImageView favorite = (ImageView) findViewById(R.id.ibFavorite);
-        if (tweet.favorited) {
-            favorite.setImageResource(R.drawable.ic_favorite);
-        } else {
-            favorite.setImageResource(R.drawable.ic_favorite_stroke);
-        }
+        updateFavePic();
+        updateRetweetPic();
 
         ImageView media = (ImageView) findViewById(R.id.ivMedia);
         if (tweet.includesMedia) {
@@ -79,8 +66,6 @@ public class TweetDetailsActivity extends AppCompatActivity {
         userName.setText(tweet.user.name);
         screenName.setText(tweet.user.screenName);
         tweetBody.setText(tweet.body);
-        tvFaveCount.setText("" + tweet.faveCount);
-        tvRetweetCount.setText("" + tweet.retweetCount);
 
         Glide.with(this)
                 .load(tweet.user.profileImageUrl)
@@ -96,7 +81,7 @@ public class TweetDetailsActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_user_timeline, menu);
+        getMenuInflater().inflate(R.menu.menu_details_view, menu);
         return true;
     }
 
@@ -185,15 +170,7 @@ public class TweetDetailsActivity extends AppCompatActivity {
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                         super.onSuccess(statusCode, headers, response);
                         tweet.favorited = !tweet.favorited;
-                        if (tweet.favorited) {
-                            Toast.makeText(context, "Favorited", Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(context, "Unfavorited", Toast.LENGTH_SHORT).show();
-                        }
-
-                        Intent intent = new Intent(context, TweetDetailsActivity.class);
-                        intent.putExtra("tweet", Parcels.wrap(tweet));
-                        context.startActivity(intent);
+                        updateFavePic();
                     }
 
                     @Override
@@ -211,17 +188,12 @@ public class TweetDetailsActivity extends AppCompatActivity {
         retweet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                client.retweet(tweet.uid, new JsonHttpResponseHandler() {
-
+                client.retweet(tweet.retweeted, tweet.uid, new JsonHttpResponseHandler() {
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                         super.onSuccess(statusCode, headers, response);
-                        //mark tweet as retweeted?
-                        tweet.retweeted = true;
-                        Toast.makeText(context, "Retweeted", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(context, TweetDetailsActivity.class);
-                        intent.putExtra("tweet", Parcels.wrap(tweet));
-                        context.startActivity(intent);
+                        tweet.retweeted = !tweet.retweeted;
+                        updateRetweetPic();
                     }
 
                     @Override
@@ -234,12 +206,27 @@ public class TweetDetailsActivity extends AppCompatActivity {
         });
     }
 
-
     public void onHomeTimeline(MenuItem item) {
         //launch profile view
         Intent intent = new Intent(this, TimeLineActivity.class);
         startActivity(intent);
     }
 
-    //TODO: add button to get to profile on menu
+    public void updateRetweetPic() {
+        ImageView retweet = (ImageView) findViewById(R.id.ibRetweet);
+        if (tweet.retweeted) {
+            retweet.setImageResource(R.drawable.ic_retweet);
+        } else {
+            retweet.setImageResource(R.drawable.ic_retweet_stroke);
+        }
+    }
+
+    public void updateFavePic() {
+        ImageView favorite = (ImageView) findViewById(R.id.ibFavorite);
+        if (tweet.favorited) {
+            favorite.setImageResource(R.drawable.ic_favorite);
+        } else {
+            favorite.setImageResource(R.drawable.ic_favorite_stroke);
+        }
+    }
 }

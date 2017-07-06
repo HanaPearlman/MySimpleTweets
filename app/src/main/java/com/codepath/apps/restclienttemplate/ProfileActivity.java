@@ -33,7 +33,7 @@ import org.parceler.Parcels;
 import cz.msebera.android.httpclient.Header;
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
-public class ProfileActivity extends AppCompatActivity implements TweetsListFragment.TweetSelectedListener {
+public class ProfileActivity extends AppCompatActivity implements TweetsListFragment.TweetSelectedListener, TweetsListFragment.UserSelectedListener {
 
     TwitterClient client;
     UserTimelineFragment userTimelineFragment;
@@ -105,6 +105,13 @@ public class ProfileActivity extends AppCompatActivity implements TweetsListFrag
     public void onTweetSelected(Tweet tweet) {
         Intent intent = new Intent(this, TweetDetailsActivity.class);
         intent.putExtra("tweet", Parcels.wrap(tweet));
+        startActivity(intent);
+    }
+
+    @Override
+    public void onUserSelected(User user) {
+        Intent intent = new Intent(this, ProfileActivity.class);
+        intent.putExtra("screen_name", user.screenName);
         startActivity(intent);
     }
 
