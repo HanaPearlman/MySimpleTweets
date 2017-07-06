@@ -8,11 +8,4 @@
         android:title="Item"
         app:showAsAction="ifRoom"
         android:onClick="onHomeTimeline"/>
-    <item
-        android:id="@+id/icCompose"
-        android:icon="@drawable/ic_compose"
-        app:showAsAction="ifRoom"
-        android:onClick="onComposeAction"
-        android:title="Compose"
-        />
 </menu>

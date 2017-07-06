@@ -13,9 +13,11 @@ import android.view.ViewGroup;
 import com.codepath.apps.restclienttemplate.R;
 import com.codepath.apps.restclienttemplate.TweetAdapter;
 import com.codepath.apps.restclienttemplate.models.Tweet;
+import com.codepath.apps.restclienttemplate.models.User;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -27,6 +29,10 @@ public class TweetsListFragment extends Fragment implements TweetAdapter.TweetAd
 
     public interface TweetSelectedListener {
         public void onTweetSelected(Tweet tweet);
+    }
+
+    public interface  UserSelectedListener {
+        public void onUserSelected(User user);
     }
 
     TweetAdapter tweetAdapter;
@@ -68,9 +74,31 @@ public class TweetsListFragment extends Fragment implements TweetAdapter.TweetAd
         }
     }
 
+    public void addItem(JSONObject response) {
+        try {
+            Tweet tweet = Tweet.fromJSON(response);
+            tweets.add(0, tweet);
+            tweetAdapter.notifyItemInserted(0);
+            rvTweets.getLayoutManager().scrollToPosition(0);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public void onItemSelected(View view, int position) {
         Tweet tweet = tweets.get(position);
         ((TweetSelectedListener) getActivity()).onTweetSelected(tweet);
+    }
+
+    @Override
+    public void onProfileSelected(View view, int position) {
+        Tweet tweet = tweets.get(position);
+        User user = tweet.user;
+        ((UserSelectedListener) getActivity()).onUserSelected(user);
+    }
+
+    public void onCompose() {
+
     }
 }

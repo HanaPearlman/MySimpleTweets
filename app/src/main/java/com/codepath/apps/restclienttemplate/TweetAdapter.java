@@ -29,9 +29,10 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
     private Context context;
     private TweetAdapterListener mListener;
 
-    //define an internface required by the ViewHolder
+    //define an interface required by the ViewHolder
     public interface TweetAdapterListener {
         public void onItemSelected(View view, int position);
+        public void onProfileSelected(View view, int position);
     }
 
     // pass in the Tweets array in the constructor
@@ -140,8 +141,22 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
                         int position = getAdapterPosition();
                         // make sure the position is valid
                         if (position != RecyclerView.NO_POSITION) {
-                            // get the movie at the position
+                            // get the tweet at the position
                             mListener.onItemSelected(view, position);
+                        }
+                    }
+                }
+            });
+
+            ivProfileImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (mListener != null) {
+                        int position = getAdapterPosition();
+                        // make sure the position is valid
+                        if (position != RecyclerView.NO_POSITION) {
+                            // get the tweet at the position
+                            mListener.onProfileSelected(view, position);
                         }
                     }
                 }

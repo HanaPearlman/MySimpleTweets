@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import com.codepath.apps.restclienttemplate.fragments.TweetsListFragment;
 import com.codepath.apps.restclienttemplate.models.Tweet;
+import com.codepath.apps.restclienttemplate.models.User;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONObject;
@@ -29,10 +30,11 @@ import org.parceler.Parcels;
 
 import cz.msebera.android.httpclient.Header;
 
-public class TimeLineActivity extends AppCompatActivity implements TweetsListFragment.TweetSelectedListener {
+public class TimeLineActivity extends AppCompatActivity implements TweetsListFragment.TweetSelectedListener, TweetsListFragment.UserSelectedListener {
     private final int REQUEST_CODE = 20;
     //private SwipeRefreshLayout swipeContainer;
     //Context context;
+    TweetsPagerAdapter pagerAdapter;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -46,6 +48,7 @@ public class TimeLineActivity extends AppCompatActivity implements TweetsListFra
         super.onCreate(savedInstanceState);
         //context = this;
         setContentView(R.layout.activity_timeline);
+        pagerAdapter = new TweetsPagerAdapter(getSupportFragmentManager(), this);
 
         /*// Lookup the swipe container view
         swipeContainer = (SwipeRefreshLayout) findViewById(R.id.swipeContainer);
@@ -138,8 +141,9 @@ public class TimeLineActivity extends AppCompatActivity implements TweetsListFra
                             @Override
                             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                                 Toast.makeText(context, "Tweet sent", Toast.LENGTH_SHORT).show();
-                                Intent intent = new Intent(context, TimeLineActivity.class);
-                                context.startActivity(intent);
+                                ((TweetsListFragment) pagerAdapter.getItem(0)).addItem(response);
+                                //Intent intent = new Intent(context, TimeLineActivity.class);
+                                //context.startActivity(intent);
                             }
 
                             @Override
@@ -184,6 +188,13 @@ public class TimeLineActivity extends AppCompatActivity implements TweetsListFra
     public void onTweetSelected(Tweet tweet) {
         Intent intent = new Intent(this, TweetDetailsActivity.class);
         intent.putExtra("tweet", Parcels.wrap(tweet));
+        startActivity(intent);
+    }
+
+    @Override
+    public void onUserSelected(User user) {
+        Intent intent = new Intent(this, ProfileActivity.class);
+        intent.putExtra("screen_name", user.screenName);
         startActivity(intent);
     }
 }

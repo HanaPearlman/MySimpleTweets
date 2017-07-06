@@ -36,6 +36,7 @@ import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 public class ProfileActivity extends AppCompatActivity implements TweetsListFragment.TweetSelectedListener {
 
     TwitterClient client;
+    UserTimelineFragment userTimelineFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +45,7 @@ public class ProfileActivity extends AppCompatActivity implements TweetsListFrag
 
         String screenName = getIntent().getStringExtra("screen_name");
         //create user fragment
-        UserTimelineFragment userTimelineFragment = UserTimelineFragment.newInstance(screenName);
+        userTimelineFragment = UserTimelineFragment.newInstance(screenName);
         //display the user timeline fragment (dynamically)
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 
@@ -54,7 +55,7 @@ public class ProfileActivity extends AppCompatActivity implements TweetsListFrag
         ft.commit();
 
         client = TwitterApp.getRestClient();
-        client.getUserInfo(new JsonHttpResponseHandler() {
+        client.getUserInfo(screenName, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 try {
@@ -150,8 +151,7 @@ public class ProfileActivity extends AppCompatActivity implements TweetsListFrag
                             @Override
                             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                                 Toast.makeText(context, "Tweet sent", Toast.LENGTH_SHORT).show();
-                                Intent intent = new Intent(context, TimeLineActivity.class);
-                                context.startActivity(intent);
+                                userTimelineFragment.addItem(response);
                             }
 
                             @Override
