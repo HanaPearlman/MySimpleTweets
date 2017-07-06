@@ -13,6 +13,8 @@
             android:id="@+id/ivProfileImage"
             android:layout_width="75dp"
             android:layout_height="75dp"
+            android:layout_marginLeft="4dp"
+            android:layout_marginTop="4dp"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
             android:layout_marginRight="10dp"
@@ -40,17 +42,43 @@
         android:layout_below="@+id/rlUserHeader"
         android:layout_marginBottom="10dp"
         android:orientation="horizontal">
+
         <TextView
             android:id="@+id/tvFollowers"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Followers"/>
+            android:layout_marginLeft="4dp"
+            android:text="Followers"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/Followers"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/tvFollowing"
+            android:layout_toEndOf="@+id/llCounts"
+            android:layout_marginLeft="4dp"
+            android:text="followers" />
+
         <TextView
             android:id="@+id/tvFollowing"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:text="Following"/>
+            android:layout_below="@+id/rlUserHeader"
+            android:layout_marginLeft="16dp"
+            android:layout_toEndOf="@+id/Followers"
+            android:text="Following"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/Following"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/tvFollowing"
+            android:layout_below="@+id/rlUserHeader"
+            android:text="following"
+            android:layout_marginLeft="4dp"/>
+
     </LinearLayout>
     <FrameLayout
         android:id="@+id/flContainer"

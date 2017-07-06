@@ -89,8 +89,8 @@ public class ProfileActivity extends AppCompatActivity implements TweetsListFrag
 
         tvName.setText(user.name);
         tvTagline.setText(user.tagLine);
-        tvFollowers.setText(user.followersCount + " Followers");
-        tvFollowing.setText(user.followingCount + " Following");
+        tvFollowers.setText(user.followersCount + "");
+        tvFollowing.setText(user.followingCount + "");
 
         Glide.with(this)
                 .load(user.profileImageUrl)
