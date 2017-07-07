@@ -17,6 +17,9 @@ The following **required** functionality is completed:
 * [X] User can then enter a new tweet and post this to twitter
 * [X] User is taken back to home timeline with **new tweet visible** in timeline
 * [X] Newly created tweet should be manually inserted into the timeline and not rely on a full refresh
+* [X] User can switch between Timeline and Mention views using tabs.
+* [X] User can navigate to view their own profile (User can see picture, tagline, # of followers, # of following, and tweets on their profile)
+* [X] User can click on the profile image in any tweet to see another user's profile.
 
 The following **optional** features are implemented:
 
@@ -26,15 +29,15 @@ The following **optional** features are implemented:
 * [X] User can **select "reply" from detail view to respond to a tweet**
 * [X] User that wrote the original tweet is **automatically "@" replied in compose**
 * [X] User can tap a tweet to **open a detailed tweet view**
-* [X] User can **take favorite (and unfavorite) or reweet** actions on a tweet
-* [X] User can **see embedded image media within a tweet** on detail view.
+* [X] User can **take favorite (and unfavorite) or reweet (and unretweet)** actions on a tweet
+* [X] User can **see embedded image media within a tweet** on detail view AND timeline view
 
 The following **bonus** features are implemented:
 
 * [X] Compose tweet functionality is built using modal overlay
 * [X] Use Parcelable instead of Serializable using the popular [Parceler library](http://guides.codepath.com/android/Using-Parceler).
-* [X] User can see embedded image media within the tweet detail view
-* [X] Reply tweet functionality is built using a modal overlay, user can reply from detail view and from Timeline view
+* [X] User can see embedded image media within the tweet detail view AND timeline view
+* [X] Reply tweet functionality is built using a modal overlay, user can reply to a tweet from detail view and from timeline view
 * [X] User can **click a link within a tweet body** on tweet details view. The click will launch the web browser with relevant page opened.
 
 
