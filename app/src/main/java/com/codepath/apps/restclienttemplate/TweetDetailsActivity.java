@@ -39,7 +39,7 @@ public class TweetDetailsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = this;
-        pagerAdapter = new TweetsPagerAdapter(getSupportFragmentManager(), this);
+        pagerAdapter = new TweetsPagerAdapter(getSupportFragmentManager());
         setContentView(R.layout.activity_tweet_details);
         Intent intent = getIntent();
         tweet = (Tweet) Parcels.unwrap(intent.getParcelableExtra("tweet"));

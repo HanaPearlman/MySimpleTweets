@@ -1,22 +1,32 @@
 package com.codepath.apps.restclienttemplate;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.text.format.DateUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.codepath.apps.restclienttemplate.models.Tweet;
+import com.loopj.android.http.AsyncHttpResponseHandler;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
 
+import cz.msebera.android.httpclient.Header;
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
 /**
@@ -83,6 +93,16 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
         } else {
             holder.ibRetweet.setImageResource(R.drawable.ic_retweet_stroke);
         }
+
+        //TODO: bug when trying to display images
+        if (tweet.includesMedia) {
+            Glide.with(context)
+                    .load(tweet.mediaUrl)
+                    .placeholder(R.drawable.ic_placeholder)
+                    .into(holder.ivMedia);
+        } else {
+            holder.ivMedia.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -102,6 +122,7 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
         public ImageView ibRetweet;
         public ImageView ibFavorite;
         public ImageView ibReply;
+        public ImageView ivMedia;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -117,8 +138,8 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
             ibRetweet = (ImageView) itemView.findViewById(R.id.ibRetweet);
             ibFavorite = (ImageView) itemView.findViewById(R.id.ibFavorite);
             ibReply = (ImageView) itemView.findViewById(R.id.ibReply);
-    //TODO: come back to this later
-            /*
+            ivMedia = (ImageView) itemView.findViewById(R.id.ivMedia);
+
             ibReply.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -129,10 +150,10 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
                         Tweet tweet = mTweets.get(position);
                         String replyUser = tweet.user.screenName;
                         long id = tweet.uid;
-                        showAlertDialogForCompose(replyUser, id);
+                        showAlertDialogForCompose(context, replyUser, id);
                     }
                 }
-            }); */
+            });
 
             tvBody.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -176,7 +197,6 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
             relativeDate = DateUtils.getRelativeTimeSpanString(dateMillis,
                     System.currentTimeMillis(), DateUtils.SECOND_IN_MILLIS).toString();
 
-            // TODO: this is very hacky
             relativeDate = relativeDate.replace(" seconds", "s");
             relativeDate = relativeDate.replace(" second", "s");
             relativeDate = relativeDate.replace(" minutes", "m");
@@ -202,9 +222,10 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
         mTweets.addAll(list);
         notifyDataSetChanged();
     }
-/*
-    private static void showAlertDialogForCompose(String originalUser, long replyID) {
 
+    private static void showAlertDialogForCompose(Context context1, String originalUser, long replyID) {
+
+        final Context context = context1;
         final long inReplyToStatusId = replyID;
         final String replyUser = originalUser;
 
@@ -246,7 +267,20 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
                     public void onClick(DialogInterface dialog, int which) {
                         String reply = etName.getText().toString();
                         reply = replyUser + " " + reply;
-                        client.reply(reply, inReplyToStatusId, new JsonHttpResponseHandler() {
+                        client.reply(reply, inReplyToStatusId, new AsyncHttpResponseHandler() {
+                            @Override
+                            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                                Toast.makeText(context, "Reply sent", Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(context, TimeLineActivity.class);
+                                context.startActivity(intent);
+                            }
+
+                            @Override
+                            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                                Toast.makeText(context, "Reply failed", Toast.LENGTH_SHORT).show();
+                                Log.e("ComposeTweet onFailure", "Failure replying", error);
+                            }
+/*
                             @Override
                             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                                 Toast.makeText(context, "Reply sent", Toast.LENGTH_SHORT).show();
@@ -258,7 +292,8 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
                             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                                 Toast.makeText(context, "Reply failed", Toast.LENGTH_SHORT).show();
                                 Log.e("ComposeTweet onFailure", "Failure replying", throwable);
-                            }
+                            }*/
+
                         });
                     }
                 });
@@ -273,5 +308,5 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
 
         // Display the dialog
         alertDialog.show();
-    }*/
+    }
 }

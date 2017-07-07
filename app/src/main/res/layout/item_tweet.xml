@@ -60,7 +60,7 @@
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:layout_alignStart="@+id/tvBody"
-        android:layout_below="@+id/tvBody"
+        android:layout_below="@+id/ivMedia"
         app:srcCompat="@drawable/ic_reply" />
 
     <ImageView
@@ -96,4 +96,12 @@
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/ibReply"
         android:layout_toEndOf="@+id/ibFavorite"/>
+
+    <ImageView
+        android:id="@+id/ivMedia"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/ibReply"
+        android:layout_below="@+id/tvBody"
+        app:srcCompat="@android:color/black" />
 </RelativeLayout>

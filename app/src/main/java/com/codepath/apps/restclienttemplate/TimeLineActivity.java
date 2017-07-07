@@ -48,13 +48,13 @@ public class TimeLineActivity extends AppCompatActivity implements TweetsListFra
         super.onCreate(savedInstanceState);
         //context = this;
         setContentView(R.layout.activity_timeline);
-        pagerAdapter = new TweetsPagerAdapter(getSupportFragmentManager(), this);
+        pagerAdapter = new TweetsPagerAdapter(getSupportFragmentManager());
 
         //get the view pager
         ViewPager vpPager = (ViewPager) findViewById(R.id.viewpager);
 
         //set the adapter for the pager
-        vpPager.setAdapter(new TweetsPagerAdapter(getSupportFragmentManager(), this));
+        vpPager.setAdapter(pagerAdapter);
 
         //setup the tab layout
         TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);

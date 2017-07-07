@@ -16,12 +16,13 @@ public class TweetsPagerAdapter extends FragmentPagerAdapter {
 
     private String tabTitles[] = new String[] {"Home", "Mentions"};
     private Context context;
-    HomeTimelineFragment htFragment = new HomeTimelineFragment();
-    MentionsTimelineFragment mtFragment = new MentionsTimelineFragment();
+    HomeTimelineFragment htFragment;
+    MentionsTimelineFragment mtFragment;
 
-    public TweetsPagerAdapter(FragmentManager fm, Context context) {
+    public TweetsPagerAdapter(FragmentManager fm) {
         super(fm);
-        this.context = context;
+        htFragment = new HomeTimelineFragment();
+        mtFragment = new MentionsTimelineFragment();
     }
 
     //return total number of fragments
