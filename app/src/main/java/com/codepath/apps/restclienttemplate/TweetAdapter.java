@@ -75,6 +75,16 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
                 .bitmapTransform(new RoundedCornersTransformation(context, 10, 0))
                 .into(holder.ivProfileImage);
 
+        if (tweet.includesMedia) {
+            Glide.with(context)
+                    .load(tweet.mediaUrl)
+                    .placeholder(R.drawable.ic_placeholder)
+                    .into(holder.ivMedia);
+            holder.ivMedia.setVisibility(View.VISIBLE);
+        } else {
+            holder.ivMedia.setVisibility(View.GONE);
+        }
+
         holder.tvUsername.setText(tweet.user.name);
         holder.tvBody.setText(tweet.body);
         holder.tvRelTime.setText(getRelativeTimeAgo(tweet.createdAt));
@@ -92,16 +102,6 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
             holder.ibRetweet.setImageResource(R.drawable.ic_retweet);
         } else {
             holder.ibRetweet.setImageResource(R.drawable.ic_retweet_stroke);
-        }
-
-        //TODO: bug when trying to display images
-        if (tweet.includesMedia) {
-            Glide.with(context)
-                    .load(tweet.mediaUrl)
-                    .placeholder(R.drawable.ic_placeholder)
-                    .into(holder.ivMedia);
-        } else {
-            holder.ivMedia.setVisibility(View.GONE);
         }
     }
 
@@ -156,6 +156,20 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
             });
 
             tvBody.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (mListener != null) {
+                        int position = getAdapterPosition();
+                        // make sure the position is valid
+                        if (position != RecyclerView.NO_POSITION) {
+                            // get the tweet at the position
+                            mListener.onItemSelected(view, position);
+                        }
+                    }
+                }
+            });
+
+            ivMedia.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     if (mListener != null) {
