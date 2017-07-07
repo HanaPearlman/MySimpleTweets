@@ -32,7 +32,6 @@ import cz.msebera.android.httpclient.Header;
 
 public class TimeLineActivity extends AppCompatActivity implements TweetsListFragment.TweetSelectedListener, TweetsListFragment.UserSelectedListener {
     private final int REQUEST_CODE = 20;
-    //private SwipeRefreshLayout swipeContainer;
     //Context context;
     TweetsPagerAdapter pagerAdapter;
 

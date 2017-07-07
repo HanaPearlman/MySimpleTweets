@@ -19,6 +19,7 @@ import cz.msebera.android.httpclient.Header;
 
 public class UserTimelineFragment extends TweetsListFragment {
     TwitterClient client;
+    public String screenName;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -33,6 +34,7 @@ public class UserTimelineFragment extends TweetsListFragment {
         Bundle args = new Bundle();
         args.putString("screen_name", screenName);
         userTimelineFragment.setArguments(args);
+        userTimelineFragment.screenName = screenName;
         return userTimelineFragment;
     }
 
@@ -66,6 +68,22 @@ public class UserTimelineFragment extends TweetsListFragment {
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
                 Log.d("TwitterClient", errorResponse.toString());
                 throwable.printStackTrace();
+            }
+        });
+    }
+
+    public void fetchTimelineAsync(int page) {
+        client.getUserTimeline(screenName, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                tweetAdapter.clear();
+                populateTimeline();
+                swipeContainer.setRefreshing(false);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                Log.d("DEBUG", "Fetch timeline error: " + throwable.toString());
             }
         });
     }
