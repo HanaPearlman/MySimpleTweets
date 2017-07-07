@@ -18,7 +18,6 @@ import cz.msebera.android.httpclient.Header;
  */
 
 public class UserTimelineFragment extends TweetsListFragment {
-    //TODO: figure out why it crashes when you click something in user timeline
     TwitterClient client;
 
     @Override

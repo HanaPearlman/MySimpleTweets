@@ -41,8 +41,8 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
 
     //define an interface required by the ViewHolder
     public interface TweetAdapterListener {
-        public void onItemSelected(View view, int position);
-        public void onProfileSelected(View view, int position);
+        void onItemSelected(View view, int position);
+        void onProfileSelected(View view, int position);
     }
 
     // pass in the Tweets array in the constructor
@@ -65,7 +65,6 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        // get the data according to position
         Tweet tweet = mTweets.get(position);
 
         Glide.with(context)
@@ -231,12 +230,6 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
         notifyDataSetChanged();
     }
 
-    // Add a list of items -- change to type used
-    public void addAll(List<Tweet> list) {
-        mTweets.addAll(list);
-        notifyDataSetChanged();
-    }
-
     private static void showAlertDialogForCompose(Context context1, String originalUser, long replyID) {
 
         final Context context = context1;
@@ -294,20 +287,6 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
                                 Toast.makeText(context, "Reply failed", Toast.LENGTH_SHORT).show();
                                 Log.e("ComposeTweet onFailure", "Failure replying", error);
                             }
-/*
-                            @Override
-                            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                                Toast.makeText(context, "Reply sent", Toast.LENGTH_SHORT).show();
-                                Intent intent = new Intent(context, TimeLineActivity.class);
-                                context.startActivity(intent);
-                            }
-
-                            @Override
-                            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                                Toast.makeText(context, "Reply failed", Toast.LENGTH_SHORT).show();
-                                Log.e("ComposeTweet onFailure", "Failure replying", throwable);
-                            }*/
-
                         });
                     }
                 });
